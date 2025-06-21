@@ -78,8 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
                handler.post(() -> {
                    if(responseCode == 200){
-                       Toast.makeText(this, "Bravo, shit works", Toast.LENGTH_SHORT).show();
-                       Intent intent = new Intent(this, SearchActivity.class);
+                       Intent intent = new Intent(this, SongActivity.class);
                        startActivity(intent);
                    } else if (responseCode == 404) {
                        Toast.makeText(this, "Incorrect username or password", Toast.LENGTH_SHORT).show();
