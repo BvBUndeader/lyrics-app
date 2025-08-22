@@ -56,11 +56,12 @@ public class SongActivity extends AppCompatActivity {
         songLyricsTV = findViewById(R.id.songLyricsTV);
 
         String title = "limousine";
+        String artist = "bring me the horizon";
 
         executor.execute(() -> {
             try{
                 String endpointString = RequestHelper.ADDRESS + RequestHelper.SINGLE_SONG_ENDPOINT;
-                endpointString = String.format(endpointString, title);
+                endpointString = String.format(endpointString, title, artist);
                 URL url = new URL(endpointString);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
