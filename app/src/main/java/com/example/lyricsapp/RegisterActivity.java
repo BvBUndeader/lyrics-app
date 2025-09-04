@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,7 +18,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.lyricsapp.entities.RequestRegister;
+import com.example.lyricsapp.entities.UserData;
+import com.example.lyricsapp.services.RegisterService;
 import com.example.lyricsapp.utility.RequestHelper;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,13 +38,31 @@ import java.net.URL;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class RegisterActivity extends AppCompatActivity {
 
     EditText registerUsernameET;
     EditText registerPasswordET;
     EditText registerEmailET;
+    EditText registerPasswordConfirmET;
     TextView registerErrorTV;
     Button registerAccB;
+
+    Button cancelB;
+
+    TextInputLayout regUsernameTextInputLayout;
+    TextInputLayout regEmailTextInputLayout;
+    TextInputLayout regPasswordTextInputLayout;
+    TextInputLayout regPasswordConfirmTextInputLayout;
+
+    boolean isEmpty;
+    boolean invalidEmail;
+    boolean invalidPass;
 
     private Executor executor = Executors.newSingleThreadExecutor();
     private Handler handler = new Handler(Looper.getMainLooper());
@@ -58,83 +82,118 @@ public class RegisterActivity extends AppCompatActivity {
         registerPasswordET = findViewById(R.id.registerPasswordET);
         registerEmailET = findViewById(R.id.registerEmailET);
         registerErrorTV = findViewById(R.id.registerErrorTV);
+        registerPasswordConfirmET = findViewById(R.id.registerPasswordConfirmET);
         registerAccB = findViewById(R.id.registerAccB);
+        cancelB = findViewById(R.id.cancelB);
+
+        regUsernameTextInputLayout = findViewById(R.id.regUsernameTextInputLayout);
+        regEmailTextInputLayout = findViewById(R.id.regEmailTextInputLayout);
+        regPasswordTextInputLayout = findViewById(R.id.regPasswordTextInputLayout);
+        regPasswordConfirmTextInputLayout = findViewById(R.id.regPasswordConfirmTextInputLayout);
 
     }
 
-    public void registerButtonClicked(View view){
+    public void registerButtonClicked(View view) {
         String username = registerUsernameET.getText().toString();
         String password = registerPasswordET.getText().toString();
+        String passwordConfirm = registerPasswordConfirmET.getText().toString();
         String email = registerEmailET.getText().toString();
 
-        if(username.isEmpty() || password.isEmpty() || email.isEmpty()){
-            registerErrorTV.setText("Please fill out the fields");
+        Intent intent = new Intent(this, MainActivity.class);
+
+        if (username.isEmpty() || password.isEmpty() || passwordConfirm.isEmpty() || email.isEmpty()) {
+            regUsernameTextInputLayout.setError(null);
+            regPasswordTextInputLayout.setError(null);
+            regPasswordConfirmTextInputLayout.setError(null);
+            regEmailTextInputLayout.setError(null);
+            if (username.isEmpty()) {
+                regUsernameTextInputLayout.setError("Please fill out the field!");
+            }
+            if (password.isEmpty()) {
+                regPasswordTextInputLayout.setError("Please fill out the field!");
+            }
+            if (passwordConfirm.isEmpty()) {
+                regPasswordConfirmTextInputLayout.setError("Please fill out the field!");
+            }
+            if (email.isEmpty()) {
+                regEmailTextInputLayout.setError("Please fill out the field!");
+            }
+            isEmpty = true;
+        }
+
+
+
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            regEmailTextInputLayout.setError("Please enter a valid email!");
+            invalidEmail = true;
+        }
+
+
+
+        if(!password.equals(passwordConfirm)){
+            regPasswordTextInputLayout.setError("Passwords do not match");
+            regPasswordConfirmTextInputLayout.setError("Passwords do not match");
+            invalidPass = true;
+        }
+
+        if(isEmpty || invalidEmail || invalidPass){
             return;
         }
 
-        executor.execute(() -> {
-            try {
-                String endpointString = RequestHelper.ADDRESS + RequestHelper.REGISTER_ENDPOINT;
-                URL url = new URL(endpointString);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        regUsernameTextInputLayout.setError(null);
+        regEmailTextInputLayout.setError(null);
+        regPasswordTextInputLayout.setError(null);
+        regPasswordConfirmTextInputLayout.setError(null);
 
-                connection.setRequestMethod("POST");
-                connection.setRequestProperty("Content-Type","application/json; utf-8");
-                connection.setRequestProperty("Accept","application/json");
-                connection.setDoOutput(true);
 
-                JSONObject jsonInput = new JSONObject();
-                jsonInput.put("username", username);
-                jsonInput.put("password", password);
-                jsonInput.put("email", email);
 
-                try(OutputStream outputStream = connection.getOutputStream()){
-                    byte[] input = jsonInput.toString().getBytes("utf-8");
-                    outputStream.write(input,0,input.length);
-                }
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(RequestHelper.ADDRESS)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-                int responseCode = connection.getResponseCode();
+        RegisterService registerService = retrofit.create(RegisterService.class);
 
-                handler.post(()->{
-                    if(responseCode == 201){
-                        Toast.makeText(this, "Account created successfully", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(this, SearchActivity.class);
-                        startActivity(intent);
-                    }
-                    if (responseCode == 409){
+        RequestRegister request = new RequestRegister(username, password, email);
+
+        Call<UserData> call = registerService.register(request);
+
+        call.enqueue(new Callback<UserData>() {
+            @Override
+            public void onResponse(Call<UserData> call, Response<UserData> response) {
+                if(response.isSuccessful() && response.body() != null){
+                    UserData userData = response.body();
+                    startActivity(intent);
+                }else {
+                    int statusCode = response.code();
+                    if(statusCode == 409){
+                        String message;
                         try {
-                            InputStream stream = (responseCode < 400) ? connection.getInputStream() : connection.getErrorStream();
-
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-                            StringBuilder response = new StringBuilder();
-                            String line = reader.readLine();
-
-                            if(line.contains("Username")){
-                                registerErrorTV.setText("Username already exists");
-                                return;
-                            }
-                            if(line.contains("Email")){
-                                registerErrorTV.setText("Email already exists");
-                                return;
-                            }
-
+                            message = response.errorBody().string();
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
-                    }
-                    else {
-                        Toast.makeText(this, "Something broke " + responseCode, Toast.LENGTH_SHORT).show();
-                    }
-                });
 
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
+                        if(message.contains("Username")){
+                            regUsernameTextInputLayout.setError("Username already exists!");
+                        }
+                        if(message.contains("Email")){
+                            regEmailTextInputLayout.setError("Email already exists!");
+                        }else {
+                            Log.e("API_ERROR", "Code: " + statusCode + " Message: " + response.errorBody()+ "\"" + message);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserData> call, Throwable t) {
+                Log.e("API_FAILURE", t.getMessage(), t);
             }
         });
 
-
+        }
+    public void cancel (View view){
+        finish();
     }
 }
 

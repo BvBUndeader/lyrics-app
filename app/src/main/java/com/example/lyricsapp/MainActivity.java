@@ -1,40 +1,20 @@
 package com.example.lyricsapp;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.service.autofill.Validator;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 
-import com.example.lyricsapp.utility.RequestHelper;
-
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText usernameET;
-    EditText passwordET;
-    Button loginB;
-    Button registerB;
-    private Executor executor = Executors.newSingleThreadExecutor();
-    private Handler handler = new Handler(Looper.getMainLooper());
-
+    TextView idkTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,57 +27,50 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        usernameET = findViewById(R.id.usernameET);
-        passwordET = findViewById(R.id.passwordET);
-        loginB = findViewById(R.id.loginB);
-        registerB = findViewById(R.id.registerB);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
-    }
+        Fragment homeFragment = new HomeFragment();
+        Fragment searchFragment = new SearchFragment();
+        Fragment favoritesFragment = new FavoritesFragment();
+        Fragment settingsFragment = new SettingsFragment();
 
-    public void login(View view){
-        String username = usernameET.getText().toString();
-        String password = passwordET.getText().toString();
+        setCurrentFragment(homeFragment);
 
-        if(username.isEmpty() || password.isEmpty()){
-            Toast.makeText(this, "Please fill out the fields", Toast.LENGTH_SHORT).show();
-        }
-
-        executor.execute(() -> {
-           try {
-               String endpointString = RequestHelper.ADDRESS + RequestHelper.LOGIN_ENDPOINT;
-               endpointString = String.format(endpointString, username, password);
-               URL url = new URL(endpointString);
-               HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-               connection.setRequestMethod("GET");
-               connection.connect();
-
-
-               int responseCode = connection.getResponseCode();
-
-//               Log.i("LyricsApp", "the response is " + responseCode);
-
-               handler.post(() -> {
-                   if(responseCode == 200){
-                       Intent intent = new Intent(this, SongActivity.class);
-                       startActivity(intent);
-                   } else if (responseCode == 404) {
-                       Toast.makeText(this, "Incorrect username or password", Toast.LENGTH_SHORT).show();
-                   }else{
-                       Toast.makeText(this, "Something broke", Toast.LENGTH_SHORT).show();
-                   }
-               });
-
-
-           }
-           catch (IOException e) {
-               throw new RuntimeException(e);
-           }
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()){
+                case R.id.home:
+                    setCurrentFragment(homeFragment);
+                    break;
+                case R.id.search:
+                    setCurrentFragment(searchFragment);
+                    break;
+                case R.id.favorites:
+                    setCurrentFragment(favoritesFragment);
+                    break;
+                case R.id.more:
+                    setCurrentFragment(settingsFragment);
+                    break;
+            }
+            return true;
         });
 
+//        Intent intent = getIntent();
+//
+//        String username = intent.getStringExtra("username");
+//
+//        idkTV = findViewById(R.id.idkTV);
+//
+//        idkTV.setText("Hello " + username);
+//
+//        Intent swap = new Intent(this, SongActivity.class);
+//        startActivity(swap);
     }
 
-    public void register(View view){
-        Intent intent = new Intent(this, RegisterActivity.class);
-        startActivity(intent);
+    private void setCurrentFragment(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.flFragment, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 }
