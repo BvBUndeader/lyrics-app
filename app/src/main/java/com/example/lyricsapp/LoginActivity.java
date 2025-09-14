@@ -93,6 +93,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<UserData> call, Response<UserData> response) {
                 if(response.isSuccessful() && response.body()!=null){
                     UserData userData = response.body();
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("userData", userData);
+                    intent.putExtras(bundle);
                     startActivity(intent);
                 }else{
                     int statusCode = response.code();

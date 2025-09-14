@@ -1,6 +1,7 @@
 package com.example.lyricsapp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -10,6 +11,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.lyricsapp.entities.UserData;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,6 +29,21 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null){
+            UserData userData = bundle.getParcelable("userData", UserData.class);
+
+            if(userData != null){
+                long id = userData.getId();
+                String username = userData.getUsername();
+                String password = userData.getPassword();
+                String email = userData.getEmail();
+                Log.i("bundle_data", id + username + password + email);
+            }
+        }
+
+
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
         Fragment homeFragment = new HomeFragment();
@@ -34,20 +51,25 @@ public class MainActivity extends AppCompatActivity {
         Fragment favoritesFragment = new FavoritesFragment();
         Fragment settingsFragment = new SettingsFragment();
 
+        homeFragment.setArguments(bundle);
         setCurrentFragment(homeFragment);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()){
                 case R.id.home:
+                    homeFragment.setArguments(bundle);
                     setCurrentFragment(homeFragment);
                     break;
                 case R.id.search:
+                    searchFragment.setArguments(bundle);
                     setCurrentFragment(searchFragment);
                     break;
                 case R.id.favorites:
+                    favoritesFragment.setArguments(bundle);
                     setCurrentFragment(favoritesFragment);
                     break;
                 case R.id.more:
+                    settingsFragment.setArguments(bundle);
                     setCurrentFragment(settingsFragment);
                     break;
             }

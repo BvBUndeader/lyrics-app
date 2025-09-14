@@ -6,4 +6,5 @@
     <color name="colorPrimaryDark">#006d2d</color>
     <color name="colorAccent">#55cf86</color>
     <color name="bgCol">#f1faf0</color>
+    <color name="yellow">#FFDE21</color>
 </resources>

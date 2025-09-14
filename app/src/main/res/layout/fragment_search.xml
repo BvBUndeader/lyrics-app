@@ -3,13 +3,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".SearchFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.search.SearchBar
+            android:id="@+id/songSearchBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Search a song"
+            app:layout_scrollFlags="scroll|enterAlways" />
+
+        <com.google.android.material.search.SearchView
+            android:id="@+id/songSearchView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Search a song"
+            app:layout_behavior="com.google.android.material.search.SearchView$Behavior"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/songSearchResultsRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:clipToPadding="false"
+            android:padding="8dp" />
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
     <TextView
+        android:id="@+id/searchErrorTV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Search" />
+        android:gravity="center" />
 
 </FrameLayout>
