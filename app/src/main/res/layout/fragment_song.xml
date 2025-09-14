@@ -32,7 +32,6 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="15dp"
             android:fontFamily="@font/roboto_regular"
-            android:text="TextView"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +44,6 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
             android:fontFamily="@font/roboto_regular"
-            android:text="TextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/songTitleTV" />
 
@@ -56,7 +54,6 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
             android:fontFamily="@font/roboto_regular"
-            android:text="TextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/songAlbumTV" />
 
@@ -93,7 +90,6 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="10dp"
                     android:fontFamily="@font/roboto_regular"
-                    android:text="TextView"
                     android:textSize="18sp" />
             </LinearLayout>
         </ScrollView>
