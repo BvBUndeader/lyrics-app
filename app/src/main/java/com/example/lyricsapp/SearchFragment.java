@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.lyricsapp.entities.SongResult;
 import com.example.lyricsapp.entities.UserData;
@@ -75,16 +74,10 @@ public class SearchFragment extends Fragment {
         adapter = new ResultAdapter(new ArrayList<>(), new ResultAdapter.ClickListener() {
             @Override
             public void onItemClick(SongResult item, View v) {
-
                 bundle.putParcelable("songResult", item);
                 Fragment songFragment = new SongFragment();
                 songFragment.setArguments(bundle);
                 setCurrentFragment(songFragment);
-
-
-                Log.i("Song data: ", item.getTitle() + " " + item.getAlbum() + " " + item.getArtist());
-
-                Log.i("Message", "Wow, it works");
             }
         });
         songSearchResultRecycler.setAdapter(adapter);

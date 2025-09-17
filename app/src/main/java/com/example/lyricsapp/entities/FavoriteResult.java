@@ -1,9 +1,14 @@
 package com.example.lyricsapp.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 public class FavoriteResult {
 
+    @SerializedName("songTitle")
     private String songTitle;
+    @SerializedName("artistName")
     private String artistName;
+    @SerializedName("albumName")
 
     private String albumName;
 

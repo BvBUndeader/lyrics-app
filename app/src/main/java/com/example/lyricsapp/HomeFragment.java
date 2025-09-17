@@ -14,11 +14,6 @@ import android.widget.TextView;
 
 import com.example.lyricsapp.entities.UserData;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#} factory method to
- * create an instance of this fragment.
- */
 public class HomeFragment extends Fragment {
 
     TextView homeFragTV;
@@ -32,8 +27,6 @@ public class HomeFragment extends Fragment {
 
         TextView homeFragTV = view.findViewById(R.id.homeFragTV);
         Button homeFragSearchBtn = view.findViewById(R.id.homeFragSearchBtn);
-//
-//        homeFragTV.findViewById(R.id.homeFragTV);
         String username;
 
         if(getArguments() != null){

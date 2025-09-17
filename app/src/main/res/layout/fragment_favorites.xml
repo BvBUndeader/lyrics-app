@@ -5,11 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".FavoritesFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/songFavoriteResultsRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Favorites" />
+        android:clipToPadding="false"
+        android:padding="8dp"/>
 
 </FrameLayout>

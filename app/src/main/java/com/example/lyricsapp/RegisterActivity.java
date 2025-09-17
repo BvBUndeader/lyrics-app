@@ -64,9 +64,6 @@ public class RegisterActivity extends AppCompatActivity {
     boolean invalidEmail;
     boolean invalidPass;
 
-    private Executor executor = Executors.newSingleThreadExecutor();
-    private Handler handler = new Handler(Looper.getMainLooper());
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

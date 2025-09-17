@@ -27,11 +27,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SongFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SongFragment extends Fragment {
 
     TextView songTitleTV;
@@ -159,15 +154,6 @@ public class SongFragment extends Fragment {
                 Log.e("API_FAILURE", t.getMessage(), t);
             }
         });
-
-
-
-
-
-
-
-
-
         return view;
     }
 }

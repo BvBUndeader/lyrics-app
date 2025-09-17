@@ -22,6 +22,10 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ResultView
         this.clickListener = clickListener;
     }
 
+    public List<SongResult> getResults() {
+        return results;
+    }
+
     @NonNull
     @Override
     public ResultViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

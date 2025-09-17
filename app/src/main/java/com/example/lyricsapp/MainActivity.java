@@ -16,7 +16,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView idkTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
                 String username = userData.getUsername();
                 String password = userData.getPassword();
                 String email = userData.getEmail();
-                Log.i("bundle_data", id + username + password + email);
             }
         }
 
@@ -75,17 +73,6 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         });
-
-//        Intent intent = getIntent();
-//
-//        String username = intent.getStringExtra("username");
-//
-//        idkTV = findViewById(R.id.idkTV);
-//
-//        idkTV.setText("Hello " + username);
-//
-//        Intent swap = new Intent(this, SongActivity.class);
-//        startActivity(swap);
     }
 
     private void setCurrentFragment(Fragment fragment) {

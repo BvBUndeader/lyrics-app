@@ -37,8 +37,6 @@ public class LoginActivity extends AppCompatActivity {
     EditText passwordET;
     Button loginB;
     Button registerB;
-    private Executor executor = Executors.newSingleThreadExecutor();
-    private Handler handler = new Handler(Looper.getMainLooper());
 
 
     @Override
@@ -71,7 +69,6 @@ public class LoginActivity extends AppCompatActivity {
             userTextInputLayout.setError(null);
             if(username.isEmpty()){
                 userTextInputLayout.setError("Please fill out the field");
-//                return;
             }
             passwordTextInputLayout.setError("Please fill out the field");
             return;
