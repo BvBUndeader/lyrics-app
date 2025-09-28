@@ -122,7 +122,7 @@ public class FavoritesFragment extends Fragment {
                     int statusCode = response.code();
                     if(statusCode == 404){
                         adapter.updateResutls(new ArrayList<>());
-                        Toast.makeText(getContext(), "This user does not have any songs in favorites", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "It appears there are no songs", Toast.LENGTH_SHORT).show();
                     }else{
                         Log.e("API_ERROR", "Code: " + response.code() + ", Message: " + response.message());
                     }

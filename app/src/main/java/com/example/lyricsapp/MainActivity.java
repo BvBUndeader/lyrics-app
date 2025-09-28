@@ -29,16 +29,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Bundle bundle = getIntent().getExtras();
-        if(bundle != null){
-            UserData userData = bundle.getParcelable("userData", UserData.class);
-
-            if(userData != null){
-                long id = userData.getId();
-                String username = userData.getUsername();
-                String password = userData.getPassword();
-                String email = userData.getEmail();
-            }
-        }
 
 
 

@@ -35,8 +35,8 @@ public class SongFragment extends Fragment {
     TextView songLyricsTV;
     ImageView favoriteBtn;
 
-    UserData userData;
-    SongResult songResult;
+    private UserData userData;
+    private SongResult songResult;
     Song song;
     boolean isFavorite;
 

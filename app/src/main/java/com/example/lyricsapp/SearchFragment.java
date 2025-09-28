@@ -86,7 +86,8 @@ public class SearchFragment extends Fragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(hasFocus){
-                    InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(getContext().INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) requireContext()
+                            .getSystemService(getContext().INPUT_METHOD_SERVICE);
                     imm.showSoftInput(v.findFocus(), 0);
                 }
             }
