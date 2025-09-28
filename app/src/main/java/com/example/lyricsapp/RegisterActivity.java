@@ -50,7 +50,6 @@ public class RegisterActivity extends AppCompatActivity {
     EditText registerPasswordET;
     EditText registerEmailET;
     EditText registerPasswordConfirmET;
-    TextView registerErrorTV;
     Button registerAccB;
 
     Button cancelB;
@@ -78,7 +77,6 @@ public class RegisterActivity extends AppCompatActivity {
         registerUsernameET = findViewById(R.id.registerUsernameET);
         registerPasswordET = findViewById(R.id.registerPasswordET);
         registerEmailET = findViewById(R.id.registerEmailET);
-        registerErrorTV = findViewById(R.id.registerErrorTV);
         registerPasswordConfirmET = findViewById(R.id.registerPasswordConfirmET);
         registerAccB = findViewById(R.id.registerAccB);
         cancelB = findViewById(R.id.cancelB);
