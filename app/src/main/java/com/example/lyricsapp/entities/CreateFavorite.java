@@ -3,11 +3,11 @@ package com.example.lyricsapp.entities;
 public class CreateFavorite {
     private String username;
 
-    private String songTitle;
+    private long songId;
 
-    public CreateFavorite(String username, String songTitle) {
+    public CreateFavorite(String username, long songId) {
         this.username = username;
-        this.songTitle = songTitle;
+        this.songId = songId;
     }
 
     public String getUsername() {
@@ -18,11 +18,11 @@ public class CreateFavorite {
         this.username = username;
     }
 
-    public String getSongTitle() {
-        return songTitle;
+    public long getSongId() {
+        return songId;
     }
 
-    public void setSongTitle(String songTitle) {
-        this.songTitle = songTitle;
+    public void setSongId(long songId) {
+        this.songId = songId;
     }
 }

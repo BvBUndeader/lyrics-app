@@ -17,6 +17,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import com.example.lyricsapp.adapters.ResultAdapter;
 import com.example.lyricsapp.entities.SongResult;
 import com.example.lyricsapp.entities.UserData;
 import com.example.lyricsapp.services.SongSearchService;
@@ -106,6 +107,18 @@ public class SearchFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        String searchValue = songSearchBar.getText().toString();
+
+        if(searchValue.isEmpty()){
+            return;
+        }
+
+        performSearch(searchValue);
     }
 
     private void performSearch(String query){

@@ -11,6 +11,38 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:id="@+id/passChangeRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:background="@drawable/customborder"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/password_icon"
+                app:tint="?attr/colorPrimary" />
+
+            <TextView
+                android:id="@+id/passChangeOptionTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:fontFamily="@font/roboto_regular"
+                android:gravity="center"
+                android:text="Change Password"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
         <View
             android:id="@+id/divider"
             android:layout_width="match_parent"
@@ -21,7 +53,8 @@
             android:id="@+id/logOutRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
+            android:background="@drawable/customborder"
+            android:foreground="?attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="16dp"

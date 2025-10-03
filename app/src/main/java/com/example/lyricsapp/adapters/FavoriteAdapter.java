@@ -1,4 +1,4 @@
-package com.example.lyricsapp;
+package com.example.lyricsapp.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.lyricsapp.R;
 import com.example.lyricsapp.entities.FavoriteResult;
 import com.example.lyricsapp.entities.UserData;
 import com.google.android.material.card.MaterialCardView;

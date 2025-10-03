@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.lyricsapp.adapters.FavoriteAdapter;
 import com.example.lyricsapp.entities.FavoriteResult;
 import com.example.lyricsapp.entities.SongResult;
 import com.example.lyricsapp.entities.UserData;
@@ -77,7 +78,7 @@ public class FavoritesFragment extends Fragment {
 
                 FavoriteService favoriteService = retrofit.create(FavoriteService.class);
 
-                Call<Void> rmFavCall = favoriteService.removeFromFavorites(userData.getId(), favoriteResult.getSongTitle());
+                Call<Void> rmFavCall = favoriteService.removeFromFavorites(userData.getId(), favoriteResult.getSongId());
                 rmFavCall.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {

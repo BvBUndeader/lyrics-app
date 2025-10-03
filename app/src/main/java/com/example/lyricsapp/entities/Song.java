@@ -9,6 +9,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class Song implements Parcelable {
 
+    @SerializedName("id")
+    private long id;
     @SerializedName("title")
     private String title;
     @SerializedName("album")
@@ -18,9 +20,18 @@ public class Song implements Parcelable {
     @SerializedName("lyrics")
     private String lyrics;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public Song() {
     }
     public Song(String title, String album, String artist, String lyrics) {
+        this.id = id;
         this.title = title;
         this.album = album;
         this.artist = artist;
@@ -28,6 +39,7 @@ public class Song implements Parcelable {
     }
 
     protected Song(Parcel in) {
+        id = in.readLong();
         title = in.readString();
         album = in.readString();
         artist = in.readString();
@@ -85,6 +97,7 @@ public class Song implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeLong(id);
         dest.writeString(title);
         dest.writeString(album);
         dest.writeString(artist);

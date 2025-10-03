@@ -12,12 +12,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.lyricsapp.entities.CreateFavorite;
+import com.example.lyricsapp.entities.CreateHistoryRecord;
 import com.example.lyricsapp.entities.FavoriteData;
 import com.example.lyricsapp.entities.FavoriteResult;
+import com.example.lyricsapp.entities.HistoryData;
 import com.example.lyricsapp.entities.Song;
 import com.example.lyricsapp.entities.SongResult;
 import com.example.lyricsapp.entities.UserData;
 import com.example.lyricsapp.services.FavoriteService;
+import com.example.lyricsapp.services.HistoryService;
 import com.example.lyricsapp.services.SongService;
 import com.example.lyricsapp.utility.RequestHelper;
 
@@ -39,6 +42,7 @@ public class SongFragment extends Fragment {
     private SongResult songResult;
     Song song;
     boolean isFavorite;
+    private Bundle bundle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,11 +55,15 @@ public class SongFragment extends Fragment {
        songLyricsTV = view.findViewById(R.id.songLyricsTV);
        favoriteBtn = view.findViewById(R.id.favoriteBtn);
 
-
+        bundle = getArguments();
+        if(bundle == null){
+            bundle = new Bundle();
+        }
 
         if(getArguments() != null){
             userData = getArguments().getParcelable("userData", UserData.class);
             songResult = getArguments().getParcelable("songResult", SongResult.class);
+            bundle = getArguments();
         }
 
         if(songResult == null){
@@ -69,6 +77,7 @@ public class SongFragment extends Fragment {
 
         SongService songService = retrofit.create(SongService.class);
         FavoriteService favoriteService = retrofit.create(FavoriteService.class);
+        HistoryService historyService = retrofit.create(HistoryService.class);
 
         Call<Song> call = songService.fetchSong(songResult.getTitle(), songResult.getArtist());
         call.enqueue(new Callback<Song>() {
@@ -81,7 +90,7 @@ public class SongFragment extends Fragment {
                     songArtistTV.setText(song.getArtist());
                     songLyricsTV.setText(song.getLyrics());
 
-                    Call<FavoriteResult> favCheckCall = favoriteService.checkFavorite(userData.getId(), song.getTitle());
+                    Call<FavoriteResult> favCheckCall = favoriteService.checkFavorite(userData.getId(), song.getId());
                     favCheckCall.enqueue(new Callback<FavoriteResult>() {
                         @Override
                         public void onResponse(Call<FavoriteResult> call, Response<FavoriteResult> response) {
@@ -101,9 +110,25 @@ public class SongFragment extends Fragment {
                         }
                     });
 
+                    CreateHistoryRecord record = new CreateHistoryRecord(userData.getId(), song.getId());
+                    Call<HistoryData> createHistoryRecordCall = historyService.addToHistory(record);
+
+                    createHistoryRecordCall.enqueue(new Callback<HistoryData>() {
+                        @Override
+                        public void onResponse(Call<HistoryData> call, Response<HistoryData> response) {
+                            Log.i("API_RESPONSE", "Code: " + response.code() + ", Message: " + response.message());
+                        }
+
+                        @Override
+                        public void onFailure(Call<HistoryData> call, Throwable t) {
+                            Log.e("API_FAILURE", t.getMessage(), t);
+                        }
+                    });
+
+
                     favoriteBtn.setOnClickListener(v ->{
                         if(isFavorite){
-                            Call<Void> removeFavorite = favoriteService.removeFromFavorites(userData.getId(), song.getTitle());
+                            Call<Void> removeFavorite = favoriteService.removeFromFavorites(userData.getId(), song.getId());
                             removeFavorite.enqueue(new Callback<Void>() {
                                 @Override
                                 public void onResponse(Call<Void> call, Response<Void> response) {
@@ -122,26 +147,26 @@ public class SongFragment extends Fragment {
                                     Log.e("API_FAILURE", t.getMessage(), t);
                                 }
                             });
-                        }else {
-                            CreateFavorite createFavorite = new CreateFavorite(userData.getUsername(), song.getTitle());
-                            Call<FavoriteData> addFavorite = favoriteService.addToFavorites(createFavorite);
-                            addFavorite.enqueue(new Callback<FavoriteData>() {
-                                @Override
-                                public void onResponse(Call<FavoriteData> call, Response<FavoriteData> response) {
-                                    if(response.isSuccessful()){
-                                        favoriteBtn.setImageResource(R.drawable.favorite_star_filled);
-                                        isFavorite = true;
-                                    }else{
-                                        Log.e("API_ERROR", "Code: " + response.code() + ", Message: " + response.message());
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<FavoriteData> call, Throwable t) {
-                                    Log.e("API_FAILURE", t.getMessage(), t);
-                                }
-                            });
                         }
+                        CreateFavorite createFavorite = new CreateFavorite(userData.getUsername(), song.getId());
+                        Call<FavoriteData> addFavorite = favoriteService.addToFavorites(createFavorite);
+                        addFavorite.enqueue(new Callback<FavoriteData>() {
+                            @Override
+                            public void onResponse(Call<FavoriteData> call, Response<FavoriteData> response) {
+                                if(response.isSuccessful()){
+                                    favoriteBtn.setImageResource(R.drawable.favorite_star_filled);
+                                    isFavorite = true;
+                                }else{
+                                    Log.e("API_ERROR", "Code: " + response.code() + ", Message: " + response.message());
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<FavoriteData> call, Throwable t) {
+                                Log.e("API_FAILURE", t.getMessage(), t);
+                            }
+                        });
+
                     });
 
                 }else {
@@ -154,6 +179,27 @@ public class SongFragment extends Fragment {
                 Log.e("API_FAILURE", t.getMessage(), t);
             }
         });
+
+        songAlbumTV.setOnClickListener(v -> {
+            Fragment albumFragment = new AlbumFragment();
+            albumFragment.setArguments(bundle);
+            setCurrentFragment(albumFragment);
+        });
+
+        songArtistTV.setOnClickListener(v -> {
+            Fragment artistFragment = new ArtistFragment();
+            artistFragment.setArguments(bundle);
+            setCurrentFragment(artistFragment);
+        });
+
         return view;
+    }
+
+    private void setCurrentFragment(Fragment fragment) {
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.flFragment, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

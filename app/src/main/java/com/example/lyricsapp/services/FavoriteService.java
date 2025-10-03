@@ -16,7 +16,7 @@ import retrofit2.http.Query;
 
 public interface FavoriteService {
     @GET("/favoritescheck")
-    Call<FavoriteResult> checkFavorite(@Query("userId") long userId,@Query("songTitle") String songTitle);
+    Call<FavoriteResult> checkFavorite(@Query("userId") long userId,@Query("songId") long songId);
 
     @GET("/favorites/{userId}")
     Call<List<FavoriteResult>> listFavorites(@Path("userId") long userId);
@@ -24,6 +24,6 @@ public interface FavoriteService {
     @POST("/favorites")
     Call<FavoriteData> addToFavorites(@Body CreateFavorite createFavorite);
 
-    @DELETE("/favorites/delete/{userId}/{songTitle}")
-    Call<Void> removeFromFavorites(@Path("userId") long userId,@Path("songTitle") String songTitle);
+    @DELETE("/favorites/delete/{userId}/{songId}")
+    Call<Void> removeFromFavorites(@Path("userId") long userId,@Path("songId") long songId);
 }
